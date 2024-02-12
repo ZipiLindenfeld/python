@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 
 class SalesData:
@@ -16,11 +18,110 @@ class SalesData:
         total_sales = self.data.groupby('Product')['Total'].sum().reset_index()
         return total_sales
 
+    def plot_total_sales(self):
+        total_sales = self.calculate_total_sales()
+        products = total_sales['Product']
+        sales = total_sales['Total']
+        plt.figure(figsize=(10, 6))
+        plt.bar(products, sales, color='skyblue')
+        plt.xlabel('Product')
+        plt.ylabel('Total Sales')
+        plt.title('Total Sales for Each Product')
+        plt.tight_layout()
+        plt.show()
+
     def _calculate_total_sales_per_month(self):
         """calculate the total sales for each month"""
-        self.data['Date'] = pd.to_datetime(self.data['Date'], dayfirst=False, format='%d.%m.%Y')
         total_sales_per_month = self.data.groupby(self.data['Date'].dt.month)['Total'].sum()
         return total_sales_per_month
+
+    def plot_total_sales_per_month_lineplot(self):
+        total_sales_per_month = self._calculate_total_sales_per_month()
+        sns.set(style="whitegrid")
+        plt.figure(figsize=(10, 6))
+        sns.lineplot(x=total_sales_per_month.index, y=total_sales_per_month.values)
+        plt.xlabel('Month')
+        plt.ylabel('Total Sales')
+        plt.title('Total Sales per Month (Seaborn Line Plot)')
+        plt.show()
+
+    def plot_total_sales_per_month_scatterplot(self):
+        total_sales_per_month = self._calculate_total_sales_per_month()
+        sns.set(style="whitegrid")
+        plt.figure(figsize=(10, 6))
+        sns.scatterplot(x=total_sales_per_month.index, y=total_sales_per_month.values)
+        plt.xlabel('Month')
+        plt.ylabel('Total Sales')
+        plt.title('Total Sales per Month (Seaborn Scatter Plot)')
+        plt.show()
+
+    def plot_total_sales_per_month_barplot(self):
+        total_sales_per_month = self._calculate_total_sales_per_month()
+        sns.set(style="whitegrid")
+        plt.figure(figsize=(10, 6))
+        sns.barplot(x=total_sales_per_month.index, y=total_sales_per_month.values)
+        plt.xlabel('Month')
+        plt.ylabel('Total Sales')
+        plt.title('Total Sales per Month (Seaborn Bar Plot)')
+        plt.show()
+
+    def plot_total_sales_per_month_boxplot(self):
+        total_sales_per_month = self._calculate_total_sales_per_month()
+        sns.set(style="whitegrid")
+        plt.figure(figsize=(10, 6))
+        sns.boxplot(x=total_sales_per_month.values)
+        plt.xlabel('Total Sales')
+        plt.title('Total Sales per Month (Seaborn Box Plot)')
+        plt.show()
+
+    def plot_total_sales_per_month_violinplot(self):
+        total_sales_per_month = self._calculate_total_sales_per_month()
+        sns.set(style="whitegrid")
+        plt.figure(figsize=(10, 6))
+        sns.violinplot(x=total_sales_per_month.values)
+        plt.xlabel('Total Sales')
+        plt.title('Total Sales per Month (Seaborn Violin Plot)')
+        plt.show()
+
+    def plot_total_sales_per_month(self):
+        total_sales_per_month = self._calculate_total_sales_per_month()
+        plt.plot(total_sales_per_month.index, total_sales_per_month.values, marker='o', linestyle='-')
+        plt.xlabel('Month')
+        plt.ylabel('Total Sales')
+        plt.title('Total Sales per Month')
+        month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        plt.xticks(total_sales_per_month.index, month_names)
+        plt.tight_layout()
+        plt.show()
+
+    def plot_total_sales_per_month_horizontal_bar(self):
+        total_sales_per_month = self._calculate_total_sales_per_month()
+        total_sales_per_month.plot(kind='barh', color='skyblue')
+        plt.xlabel('Total Sales')
+        plt.ylabel('Month')
+        plt.title('Total Sales per Month (Horizontal Bar Plot)')
+        plt.tight_layout()
+        plt.show()
+
+    def plot_total_sales_per_month_pie(self):
+        total_sales_per_month = self._calculate_total_sales_per_month()
+        plt.figure(figsize=(8, 8))
+        total_sales_per_month.plot(kind='pie', autopct='%1.1f%%', colors=plt.cm.tab20.colors)
+        plt.ylabel('')
+        plt.title('Total Sales Distribution per Month (Pie Chart)')
+        plt.tight_layout()
+        plt.show()
+
+    def plot_total_sales_per_month_step(self):
+        total_sales_per_month = self._calculate_total_sales_per_month()
+        plt.step(total_sales_per_month.index, total_sales_per_month.values, color='skyblue', where='mid')
+        plt.xlabel('Month')
+        plt.ylabel('Total Sales')
+        plt.title('Total Sales per Month (Step Plot)')
+        plt.xticks(total_sales_per_month.index,
+                   ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+        plt.tight_layout()
+        plt.show()
 
     def _identify_best_selling_product(self):
         """find the product with the max total sales"""
@@ -34,10 +135,26 @@ class SalesData:
 
     def calculate_cumulative_sales(self):
         """calculate the total sales for each product in each month"""
-        self.data['Date'] = pd.to_datetime(self.data['Date'], dayfirst=False, format='%d.%m.%Y')
         monthly_sales = self.data.groupby(['Product', self.data['Date'].dt.month])['Total'].sum().groupby(
             'Product').cumsum().reset_index()
         return monthly_sales
+
+    def plot_monthly_sales_histogram(self):
+        monthly_sales = self.calculate_cumulative_sales()
+        plt.figure(figsize=(10, 6))
+        plt.hist(monthly_sales['Total'], bins=20, color='skyblue', edgecolor='black')
+        plt.xlabel('Total Sales')
+        plt.ylabel('Frequency')
+        plt.title('Histogram of Total Sales per Product')
+        plt.grid(True)
+        plt.show()
+
+    def plot_monthly_sales_boxplot(self):
+        monthly_sales = self.calculate_cumulative_sales()
+        plt.boxplot(monthly_sales['Total'], vert=False)
+        plt.xlabel('Total Sales')
+        plt.title('Box Plot of Total Sales per Product')
+        plt.show()
 
     def add_values_to_the_dictionary(self):
         d = self.analyze_sales_data()
@@ -55,6 +172,42 @@ class SalesData:
     def add_90_values_column(self):
         self.data['Discount'] = 0.9 * (self.data['Price'])
 
+    def bar_chart_category_sum(self):
+        """represent a bar chart of the sum of quantities sold for each product."""
+        grouped_data = self.data.groupby('Product')['Quantity'].sum().reset_index()
+        plt.bar(grouped_data['Product'], grouped_data['Quantity'])
+        plt.xlabel('Product')
+        plt.ylabel('Quantity Sold')
+        plt.title('Sum of Quantities Sold for Each Product')
+        plt.tight_layout()
+        plt.show()
+
+    def calculate_mean_quantity(self):
+        """return the mean,the second max and the median of the total of the sales"""
+        total_column = self.data['Total'].values
+        mean = np.mean(total_column)
+        median = np.median(total_column)
+        max_total = np.max(total_column)
+        max_index = np.where(total_column == max_total)
+        total_column = np.delete(total_column, max_index)
+        second_max = np.max(total_column)
+        return mean, median, second_max
+
+    def filter_by_selling_or(self):
+        """return filtered dataset that include the products that were sold at least 5 times or never were sold"""
+        sales_summary = self.data.groupby('Product').count().reset_index()
+        return sales_summary[(sales_summary['Quantity'] > 5) | (sales_summary['Quantity'] == 0)]
+
+    def filter_by_selling_and(self):
+        """return filtered dataset that include the products that their price is above 300 dollars and thy were sold less than twice"""
+        sales = self.data
+        sales['Count'] = sales.groupby('Product')['Product'].transform('count')
+        return sales[(sales['Price'] > 300) & (sales['Count'] < 2)]
+
+    def divide_by_2(self):
+        """adding the price for the black friday"""
+        self.data['Black_Friday'] = self.data['Price'] / 2
+
 
 class SalesDataMain:
     from FileOperation import FileOperation
@@ -63,7 +216,7 @@ class SalesDataMain:
     # 1
     file = FileOperation()
     data = file.read_csv(file_path)
-    print(data)
+    # print(data)
 
     # 4
     sales = SalesData(data)
@@ -86,14 +239,51 @@ class SalesDataMain:
     # 9
     # data = sales.analyze_sales_data()
     # print(data)
-
     # 10
     # data = sales.add_values_to_the_dictionary()
     # print(data)
     # 11
-    print("_____________________11_______________________")
-    monthly_sales = sales.calculate_cumulative_sales()
-    print(monthly_sales)
+    # monthly_sales = sales.calculate_cumulative_sales()
+    # print(monthly_sales)
     # 12
-    sales.add_90_values_column()
-    print(sales.data)
+    # sales.add_90_values_column()
+    # print(sales.data)
+    # 13
+    # sales.bar_chart_category_sum()
+    # 14
+    # tuple_calculated = sales.calculate_mean_quantity()
+    # print(tuple_calculated)
+    # 15
+    # sales = sales.filter_by_selling_or()
+    # print(sales[['Product', 'Quantity']])
+    # sales = sales.filter_by_selling_and()
+    # print(sales[['Product', 'Quantity', 'Price']])
+    # 16
+    # sales.divide_by_2()
+    # print(sales.data)
+    # task 6
+    # 1
+    # sales.plot_total_sales()
+    # 2
+    # sales.plot_total_sales_per_month()
+    # 3
+    # sales.plot_total_sales_per_month_horizontal_bar()
+    # 4
+    # sales.plot_total_sales_per_month_pie()
+    # 5
+    # sales.plot_total_sales_per_month_step()
+    # 6
+    # sales.plot_monthly_sales_histogram()
+    # 7
+    # sales.plot_monthly_sales_boxplot()
+    # seaborn
+    # 1
+    sales.plot_total_sales_per_month_lineplot()
+    # 2
+    sales.plot_total_sales_per_month_scatterplot()
+    # 3
+    sales.plot_total_sales_per_month_barplot()
+    # 4
+    sales.plot_total_sales_per_month_boxplot()
+    # 5
+    sales.plot_total_sales_per_month_violinplot()
