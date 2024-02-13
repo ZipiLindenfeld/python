@@ -1,7 +1,14 @@
+import datetime
+import random
+import platform
+from itertools import chain
+
 import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+
+import pytz as vv
 
 
 class SalesData:
@@ -157,6 +164,7 @@ class SalesData:
         plt.show()
 
     def add_values_to_the_dictionary(self):
+        """return mean sum of sales for month for each product"""
         d = self.analyze_sales_data()
         d['minimest selling product'] = self.calculate_total_sales().min()['Product']
         d["average of the sales for monthes"] = self._calculate_total_sales_per_month().mean()
@@ -207,6 +215,79 @@ class SalesData:
     def divide_by_2(self):
         """adding the price for the black friday"""
         self.data['Black_Friday'] = self.data['Price'] / 2
+
+    def treat_errors(self):
+        current_date = datetime.datetime.now().date()
+        current_time = datetime.datetime.now().time()
+        current_name = "Zipi&Sari&Ruth"
+        try:
+            x = 4 / 0
+            print(x)
+        except ZeroDivisionError:
+            print("<" + current_name + "," + str(current_date) + "," + str(
+                current_time) + "> type error: divide by zero! <" + current_name + ">")
+        try:
+            year = 50
+            month = 50
+            day = 50
+            if year < 2000 | year > 2024 | month < 1 | month > 12 | day < 1 | day > 31:
+                raise SyntaxError
+            datetime.datetime(year, month, day)
+        except SyntaxError:
+            print("<" + current_name + "," + str(current_date) + "," + str(
+                current_time) + "> type error: you didnt enter correct date!!! <" + current_name + ">")
+        try:
+            y = "aaa"
+            print(int(y))
+        except BaseException:
+            print("<" + current_name + "," + str(current_date) + "," + str(
+                current_time) + "> cannot convert type str to int <" + current_name + ">")
+        try:
+            s = {'o': 'f'}
+            print(s['Price'])
+        except BaseException:
+            print("<" + current_name + "," + str(current_date) + "," + str(
+                current_time) + "> cannot find 'Price' in s <" + current_name + ">")
+
+    def rand_num(self, product_name):
+        sum_sales = self.data.groupby('Product')['Quantity'].count()[product_name]
+        max_sales_sum = self.data.groupby('Product')['Price'].max()[product_name]
+        rand_num = random.randint(sum_sales, max_sales_sum)
+        a = []
+        a.append(product_name)
+        a.append(sum_sales)
+        a.append(max_sales_sum)
+        a.append(rand_num)
+        print(a)
+
+    def get_python_version(self):
+        version = platform.python_version()
+        return version
+
+    def process_parameters(*args):
+        result = {}
+
+        for param in args:
+            if isinstance(param, str) and "=" in param:
+                value, name = param.split("=", 1)
+                result[name] = value
+            elif isinstance(param, (int, float)):
+                print(param)
+        return result
+
+    def print_from_data(self):
+        print(self.data)
+        print(self.data.loc[[0, 1, 2]])
+
+        print("==================")
+        print(self.data.tail(2))
+
+        random_row = self.data.sample(n=1)
+        print(random_row)
+
+    def read_on_time(self):
+        for value in self.data.select_dtypes(include=[np.number]).values.flatten():
+            print(value)
 
 
 class SalesDataMain:
@@ -278,12 +359,31 @@ class SalesDataMain:
     # sales.plot_monthly_sales_boxplot()
     # seaborn
     # 1
-    sales.plot_total_sales_per_month_lineplot()
+    # sales.plot_total_sales_per_month_lineplot()
     # 2
-    sales.plot_total_sales_per_month_scatterplot()
+    # sales.plot_total_sales_per_month_scatterplot()
     # 3
-    sales.plot_total_sales_per_month_barplot()
+    # sales.plot_total_sales_per_month_barplot()
     # 4
-    sales.plot_total_sales_per_month_boxplot()
+    # sales.plot_total_sales_per_month_boxplot()
     # 5
-    sales.plot_total_sales_per_month_violinplot()
+    # sales.plot_total_sales_per_month_violinplot()
+    # task 7
+    # 1
+    # sales.treat_errors()
+    # 3
+    # sales.rand_num('Zipi')
+    # 4
+    # python_version = sales.get_python_version()
+    # print(python_version)
+    # 5
+    # result1 = sales.process_parameters(10, "j=number", 3.14)
+    # print("Result 1:", result1)
+    # result2 = sales.process_parameters("zipi=name", 20, "ruth=age", 25)
+    # print("Result 2:", result2)
+    # result3 = sales.process_parameters("d=key", True,5, "o=value", False)
+    # print("Result 3:", result3)
+    # 6
+    # sales.print_from_data()
+    # 7
+    # sales.read_on_time()
