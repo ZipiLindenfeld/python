@@ -89,32 +89,41 @@ class Task8:
         print(len(usersnames) / 8 * 200 + len(usersnames) % 8 * 50)
 
     # 1
-    file_content = read_file("UsersName.txt")
+    print("========1==========")
+    file_content = read_file("../Files/UsersName.txt")
     # 2
-    usersnames = read_usernames('UsersName.txt')
-    for username in read_usernames_gen('UsersName.txt'):
+    print("========2==========")
+    for username in read_usernames_gen('../Files/UsersName.txt'):
         print(username)
     # 3
     # usernames_array = read_usernames('usernames.txt')
     # accessible_usernames = usernames_array.get_accessible_usernames()
     # print(accessible_usernames)
     # 4
-    for user in get_even_usernames(read_usernames('UsersName.txt')):
+    print("========4==========")
+    for user in get_even_usernames(file_content):
         print(user)
     # 5
-    email_addresses = read_email_addresses('UsersEmail.txt')
+    print("========5==========")
+    email_addresses = read_email_addresses('../Files/UsersEmail.txt')
     valid_email_addresses = validate_email_addresses(email_addresses)
     for email_address in valid_email_addresses:
         print(email_address)
     # 6
+    print("========6==========")
     gmail_addresses = get_gmail_addresses(valid_email_addresses)
     for email_address in gmail_addresses:
         print(email_address)
     # 7
-    usersnames = read_usernames('UsersName.txt')
-    # check_match_name(email_addresses, usersnames)
+    print("========7==========")
+    usersnames = read_usernames('../Files/UsersName.txt')
+    check_match_name(email_addresses, usersnames)
     # 8
-    # input_name_check_if_in_the_list(usersnames)
+    print("========8==========")
+    input_name_check_if_in_the_list(usersnames)
     # 9
-    # print(check_letters(usersnames))
+    print("========9==========")
+    print(check_letters(usersnames))
+    # 10
+    print("========10==========")
     sum_i_have(usersnames)
